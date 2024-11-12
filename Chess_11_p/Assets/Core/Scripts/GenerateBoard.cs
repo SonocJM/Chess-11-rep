@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GenerateBoard : MonoBehaviour
@@ -158,8 +159,56 @@ public class GenerateBoard : MonoBehaviour
         }
     }
 
-    private void AssignPiece(int team, bool p2)   
+    private void AssignPieces(int team, bool p2)   
     {
-        
+        int[] row1;
+        int[] row2;
+        int[] row3;
+        switch(team)
+        {
+            case 0:
+                //no existe el equipo 0
+                break;
+
+                //rogue
+            case 1:
+                row1 = new int[11] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+                row2 = new int[11] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+                row3 = new int[11] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+                if (!p2)
+                {
+                    
+                    for (int i = 0; i < 11; i++)
+                    {
+                        tiles[i,0].GetComponent<Tile>().identity = row1[i];
+                    }
+                    for (int i = 0; i < 11; i++)
+                    {
+                        tiles[i, 1].GetComponent<Tile>().identity = row2[i];
+                    }
+                    for (int i = 0; i < 11; i++)
+                    {
+                        tiles[i, 2].GetComponent<Tile>().identity = row3[i];
+                    }
+
+
+                }
+                else
+                {
+                    for (int i = 0; i < 11; i++)
+                    {
+                        tiles[i, 11].GetComponent<Tile>().identity = row1[i];
+                    }
+                    for (int i = 0; i < 11; i++)
+                    {
+                        tiles[i, 10].GetComponent<Tile>().identity = row2[i];
+                    }
+                    for (int i = 0; i < 11; i++)
+                    {
+                        tiles[i, 9].GetComponent<Tile>().identity = row3[i];
+                    }
+                }
+                break;
+        }
     }
 }
