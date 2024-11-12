@@ -118,14 +118,14 @@ public class Tile : MonoBehaviour
                     }
                     if (x + 1 < 11 && y + 1 < 11)
                     {
-                        if (board.FinalBoard[x + 1, y + 1] != 0)
+                        //if (board.FinalBoard[x + 1, y + 1] != 0)
                         {
                             legalMoves[2] = pos + eatDiagonallyRight;
                         }
                     }
                     if (x - 1 > 0 && y + 1 < 11)
                     {
-                        if (board.FinalBoard[x - 1, y + 1] != 0)
+                        //if (board.FinalBoard[x - 1, y + 1] != 0)
                         {
                             legalMoves[3] = pos + eatDiagonallyLeft;
                         }

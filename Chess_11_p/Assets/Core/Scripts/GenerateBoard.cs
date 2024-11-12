@@ -6,7 +6,6 @@ public class GenerateBoard : MonoBehaviour
     [Header("ints")]
     public int TilesX; 
     public int TilesY;
-    [SerializeField]public int[,] FinalBoard;
     public int p1T;
     public int p2T;
 
@@ -29,16 +28,10 @@ public class GenerateBoard : MonoBehaviour
 
     private void Awake()
     {
-        FinalBoard = new int[11, 11];
-        for (int x = 0; x < TilesX; x++)
-        {
-            for (int y = 0; y < TilesY; y++)
-            {
-                FinalBoard[x,y] = 0;
-            }
-        }
         tiles = new GameObject[TilesX, TilesY];
         GenerateAllTiles();
+        AssignPieces(1, false);
+        AssignPieces(1, true);
     }
 
     private void GenerateAllTiles()
@@ -68,19 +61,9 @@ public class GenerateBoard : MonoBehaviour
     private void Update()
     {
         RaycastFromCamera();
-        UpdateBoard();
+        
     }
-    private void UpdateBoard()
-    {
-        for(int i = 0; i > TilesX; i++)
-        {
-            for(int j = 0; j > TilesY; j++)
-            {
-                Tile tilE = tiles[i, j].GetComponent<Tile>();
-                FinalBoard[i, j] = tilE.identity;
-            }
-        }
-    }
+    
 
     private void RaycastFromCamera()
     {
@@ -197,15 +180,15 @@ public class GenerateBoard : MonoBehaviour
                 {
                     for (int i = 0; i < 11; i++)
                     {
-                        tiles[i, 11].GetComponent<Tile>().identity = row1[i];
+                        tiles[i, 10].GetComponent<Tile>().identity = row1[i];
                     }
                     for (int i = 0; i < 11; i++)
                     {
-                        tiles[i, 10].GetComponent<Tile>().identity = row2[i];
+                        tiles[i, 9].GetComponent<Tile>().identity = row2[i];
                     }
                     for (int i = 0; i < 11; i++)
                     {
-                        tiles[i, 9].GetComponent<Tile>().identity = row3[i];
+                        tiles[i, 8].GetComponent<Tile>().identity = row3[i];
                     }
                 }
                 break;
