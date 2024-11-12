@@ -11,7 +11,7 @@ public class GenerateBoard : MonoBehaviour
 
     [Header("GameObjects")]
     public GameObject tile; 
-    private GameObject[,] tiles; 
+    public GameObject[,] tiles; 
     private GameObject lastHoveredTile; 
     private GameObject clickedTile; 
 
@@ -155,23 +155,26 @@ public class GenerateBoard : MonoBehaviour
 
                 //rogue
             case 1:
-                row1 = new int[11] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+                row1 = new int[11] { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2 };
                 row2 = new int[11] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-                row3 = new int[11] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+                row3 = new int[11] { 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
                 if (!p2)
                 {
-                    
+
                     for (int i = 0; i < 11; i++)
                     {
-                        tiles[i,0].GetComponent<Tile>().identity = row1[i];
+                        tiles[i, 0].GetComponent<Tile>().identity = row1[i];
+                        tiles[i, 0].GetComponent<Tile>().p2 = false;
                     }
                     for (int i = 0; i < 11; i++)
                     {
                         tiles[i, 1].GetComponent<Tile>().identity = row2[i];
+                        tiles[i, 1].GetComponent<Tile>().p2 = false;
                     }
                     for (int i = 0; i < 11; i++)
                     {
                         tiles[i, 2].GetComponent<Tile>().identity = row3[i];
+                        tiles[i, 2].GetComponent<Tile>().p2 = false;
                     }
 
 
@@ -181,17 +184,21 @@ public class GenerateBoard : MonoBehaviour
                     for (int i = 0; i < 11; i++)
                     {
                         tiles[i, 10].GetComponent<Tile>().identity = row1[i];
+                        tiles[i, 10].GetComponent<Tile>().p2 = true;
                     }
                     for (int i = 0; i < 11; i++)
                     {
                         tiles[i, 9].GetComponent<Tile>().identity = row2[i];
+                        tiles[i, 9].GetComponent<Tile>().p2 = true;
                     }
                     for (int i = 0; i < 11; i++)
                     {
                         tiles[i, 8].GetComponent<Tile>().identity = row3[i];
+                        tiles[i, 8].GetComponent<Tile>().p2 = true;
                     }
                 }
                 break;
         }
+
     }
 }
