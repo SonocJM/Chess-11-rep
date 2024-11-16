@@ -98,7 +98,6 @@ public class Tile : MonoBehaviour
 
     private void LegalMovesAssign(int id, int x, int y)
     {
-        
         Vector2Int pos = new Vector2Int(x, y);
 
         switch (id)
@@ -132,7 +131,6 @@ public class Tile : MonoBehaviour
                 new Vector2Int(-1, moveDirection)  // Diagonal izquierda
             };
 
-                // Verifica capturas en las casillas diagonales
                 foreach (Vector2Int captureMove in diagonalCaptures)
                 {
                     Vector2Int capturePos = pos + captureMove;
@@ -162,7 +160,6 @@ public class Tile : MonoBehaviour
                 new Vector2Int(-1, 2), new Vector2Int(-1, -2)
             };
 
-                // Agrega cada movimiento posible del caballo si es válido
                 foreach (Vector2Int move in knightMoves)
                 {
                     AddMovesIfValid(pos + move, legalMoves);
@@ -177,12 +174,10 @@ public class Tile : MonoBehaviour
                 break;
 
             case 5: // Reina
-                    // Movimientos de torre
                 AddLinearMoves(pos, legalMoves, new Vector2Int(1, 0));  // Derecha
                 AddLinearMoves(pos, legalMoves, new Vector2Int(-1, 0)); // Izquierda
                 AddLinearMoves(pos, legalMoves, new Vector2Int(0, 1));  // Arriba
                 AddLinearMoves(pos, legalMoves, new Vector2Int(0, -1)); // Abajo
-                                                                        // Movimientos de alfil
                 AddLinearMoves(pos, legalMoves, new Vector2Int(1, 1));  // Diagonal superior derecha
                 AddLinearMoves(pos, legalMoves, new Vector2Int(-1, 1)); // Diagonal superior izquierda
                 AddLinearMoves(pos, legalMoves, new Vector2Int(1, -1)); // Diagonal inferior derecha
@@ -197,15 +192,96 @@ public class Tile : MonoBehaviour
                 new Vector2Int(1, -1), new Vector2Int(-1, -1)
             };
 
-                // Agrega cada movimiento posible del rey si es válido
                 foreach (Vector2Int move in kingMoves)
                 {
                     AddMovesIfValid(pos + move, legalMoves);
                 }
                 break;
-        }
 
-        
+            case 7: // Rogue
+                Vector2Int[] rogueMoves = {
+                new Vector2Int(3, 0), new Vector2Int(-3, 0), // Movimiento horizontal
+                new Vector2Int(0, 3), new Vector2Int(0, -3)  // Movimiento vertical
+            };
+
+                foreach (Vector2Int move in rogueMoves)
+                {
+                    AddMovesIfValid(pos + move, legalMoves);
+                }
+
+                // Capturas de Rogue (como peón)
+                Vector2Int[] rogueCaptures = {
+                new Vector2Int(1, 0), new Vector2Int(-1, 0),
+                new Vector2Int(0, 1), new Vector2Int(0, -1)
+            };
+
+                foreach (Vector2Int captureMove in rogueCaptures)
+                {
+                    Vector2Int capturePos = pos + captureMove;
+                    if (IsValidMove(capturePos))
+                    {
+                        Tile targetTile = board.tiles[capturePos.x, capturePos.y].GetComponent<Tile>();
+                        if (targetTile.identity != 0 && targetTile.p2 != p2)
+                        {
+                            legalMoves.Add(capturePos);
+                        }
+                    }
+                }
+                break;
+
+            case 8: // Necromancer
+                Vector2Int[] necroMoves = {
+                new Vector2Int(1, 0), new Vector2Int(-1, 0),  // Movimiento horizontal
+                new Vector2Int(0, -1), new Vector2Int(-1, -1), new Vector2Int(1, -1) // Movimiento hacia atrás
+            };
+
+                foreach (Vector2Int move in necroMoves)
+                {
+                    AddMovesIfValid(pos + move, legalMoves);
+                }
+
+                // Capturas de Necromancer (solo hacia adelante)
+                Vector2Int[] necroCaptures = {
+                new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(-1, 1) // Captura hacia adelante
+            };
+
+                foreach (Vector2Int captureMove in necroCaptures)
+                {
+                    Vector2Int capturePos = pos + captureMove;
+                    if (IsValidMove(capturePos))
+                    {
+                        Tile targetTile = board.tiles[capturePos.x, capturePos.y].GetComponent<Tile>();
+                        if (targetTile.identity != 0 && targetTile.p2 != p2)
+                        {
+                            legalMoves.Add(capturePos);
+                        }
+                    }
+                }
+                break;
+
+            case 9: // Elementalist
+                Vector2Int[] elementalMoves = {
+                new Vector2Int(1, 0), new Vector2Int(-1, 0), // Movimiento horizontal y vertical
+                new Vector2Int(0, 1), new Vector2Int(0, -1)
+            };
+
+                foreach (Vector2Int move in elementalMoves)
+                {
+                    AddMovesIfValid(pos + move, legalMoves);
+                }
+
+                // Capturas del Elementalist (como un alfil, en diagonal)
+                Vector2Int[] elementalCaptures = {
+                new Vector2Int(1, 1), new Vector2Int(-1, 1),
+                new Vector2Int(1, -1), new Vector2Int(-1, -1)
+            };
+
+                foreach (Vector2Int captureMove in elementalCaptures)
+                {
+                    AddLinearCaptures(pos, legalMoves, captureMove);
+                }
+                break;
+        }
     }
 
     // Método para añadir movimientos lineales (recto o diagonal) mientras no se encuentren otras piezas
@@ -251,5 +327,21 @@ public class Tile : MonoBehaviour
     {
         return pos.x >= 0 && pos.x < 11 && pos.y >= 0 && pos.y < 11;
     }
+    private void AddLinearCaptures(Vector2Int startPos, List<Vector2Int> moves, Vector2Int direction)
+    {
+        Vector2Int currentPos = startPos + direction;
+
+        // Recorre las casillas en la dirección de captura hasta que se encuentre una pieza enemiga o se salga del tablero
+        if (IsValidMove(currentPos))
+        {
+            Tile tile = board.tiles[currentPos.x, currentPos.y].GetComponent<Tile>();
+
+            if (tile.identity != 0 && tile.p2 != p2) // Si hay una pieza enemiga
+            {
+                moves.Add(currentPos); // Se añade la posición de captura
+            }
+        }
+    }
+
 
 }
