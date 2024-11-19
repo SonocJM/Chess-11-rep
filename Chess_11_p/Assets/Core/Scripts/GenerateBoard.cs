@@ -32,6 +32,7 @@ public class GenerateBoard : MonoBehaviour
         GenerateAllTiles();
         if (p1T == p2T)
         {
+            //maneja el mirror match
             p2T += 3;
         }
         AssignPieces(p1T, false);
@@ -162,10 +163,24 @@ public class GenerateBoard : MonoBehaviour
 
             //rogue
             case 1 or 4:
-                row1 = new int[11] { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2 };
-                row2 = new int[11] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-                row3 = new int[11] { 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
-                
+                row1 = new int[11] { 1, 3, 2, 3, 5, 3, 6, 3, 2, 3, 1 };
+                row2 = new int[11] { 0, 1, 1, 2, 1, 7, 1, 2, 1, 1, 0 };
+                row3 = new int[11] { 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 };
+
+                break;
+
+            case 2 or 5:
+                row1 = new int[11] { 1, 4, 2, 4, 5, 4, 6, 4, 2, 4, 1 };
+                row2 = new int[11] { 0, 1, 2, 1, 1, 8, 1, 1, 2, 1, 0 };
+                row3 = new int[11] { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 };
+
+                break;
+
+            case 3 or 6:
+                row1 = new int[11] { 1, 4, 3, 5, 4, 6, 4, 5, 3, 4, 1 };
+                row2 = new int[11] { 0, 1, 1, 4, 3, 9, 3, 4, 1, 1, 0 };
+                row3 = new int[11] { 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0 };
+
                 break;
         }
         if (!p2)
