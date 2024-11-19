@@ -119,12 +119,11 @@ public class MovimientoPiezas : MonoBehaviour
         selectedTile.team = 0;
         selectedTile.identity = 0;
         selectedTile.p2 = false;
-
+        // Actualizar las piezas visualmente
         UpdateAllTiles();
 
-        // Actualizar las piezas visualmente
-        targetTile.UpdatePiece();
-        selectedTile.UpdatePiece();
+        
+        
 
         // Limpiar selección
         DeselectTile();

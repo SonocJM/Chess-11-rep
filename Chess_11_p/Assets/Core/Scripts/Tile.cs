@@ -46,21 +46,7 @@ public class Tile : MonoBehaviour
         SpawnPiece(p2);
         ChangePiece();
     }
-    public void UpdatePiece()
-    {
-        if (identity == 0 && currentPiece != null)
-        {
-            Destroy(currentPiece); // Borrar pieza si no hay identidad
-        }
-        else if (identity != 0 && currentPiece == null)
-        {
-            currentPiece = new GameObject("Piece");
-            currentPiece.transform.SetParent(transform);
-            currentPiece.transform.localPosition = Vector3.zero;
-            currentPiece.transform.localScale = new Vector3(90f, 10f, 90f);
-            currentPiece.AddComponent<MeshRenderer>();
-        }
-    }
+    
 
     public List<Vector2Int> GetLegalMoves()
     {
@@ -98,6 +84,7 @@ public class Tile : MonoBehaviour
 
     public void LegalMovesAssign()
     {
+        legalMoves.Clear();
         Vector2Int pos = new Vector2Int(x, y);
 
         switch (identity)
