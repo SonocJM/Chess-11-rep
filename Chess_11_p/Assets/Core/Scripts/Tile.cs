@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour
     [Header("information")]
     public int team;
     public int identity;
+    public bool isHighlighted = false;
     //secondary color
     public bool p2;
     public bool hasMoved = false;
@@ -41,11 +42,31 @@ public class Tile : MonoBehaviour
 
     private void Start()
     {
-        LegalMovesAssign(identity, x, y);
+        LegalMovesAssign();
         SpawnPiece(p2);
-        ChangePiece(identity, team);
+        ChangePiece();
+    }
+    public void UpdatePiece()
+    {
+        if (identity == 0 && currentPiece != null)
+        {
+            Destroy(currentPiece); // Borrar pieza si no hay identidad
+        }
+        else if (identity != 0 && currentPiece == null)
+        {
+            currentPiece = new GameObject("Piece");
+            currentPiece.transform.SetParent(transform);
+            currentPiece.transform.localPosition = Vector3.zero;
+            currentPiece.transform.localScale = new Vector3(90f, 10f, 90f);
+            currentPiece.AddComponent<MeshRenderer>();
+        }
     }
 
+    public List<Vector2Int> GetLegalMoves()
+    {
+        // Lógica para calcular movimientos legales
+        return new List<Vector2Int>(); // Reemplazar con lógica real
+    }
     private void SpawnPiece(bool p2)
     {
         // Crear un nuevo GameObject y asignarlo a currentPiece
@@ -66,20 +87,20 @@ public class Tile : MonoBehaviour
 
     
 
-    private void ChangePiece(int id, int team)
+    public void ChangePiece( )
     {
         //CAMBIAR EL Modelo
         MeshFilter meshFilter = currentPiece.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = currentPiece.GetComponent<MeshRenderer>();
-        meshFilter.mesh = PiecesModels[id];
+        meshFilter.mesh = PiecesModels[identity];
         meshRenderer.material = PiecesMaterials[team];
     }
 
-    private void LegalMovesAssign(int id, int x, int y)
+    public void LegalMovesAssign()
     {
         Vector2Int pos = new Vector2Int(x, y);
 
-        switch (id)
+        switch (identity)
         {
             case 0: // Casilla vacía
                 break;

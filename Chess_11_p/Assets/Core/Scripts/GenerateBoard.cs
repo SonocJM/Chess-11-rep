@@ -65,7 +65,7 @@ public class GenerateBoard : MonoBehaviour
 
     private void Update()
     {
-        RaycastFromCamera();
+        
 
     }
 
