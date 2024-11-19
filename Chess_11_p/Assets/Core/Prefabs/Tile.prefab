@@ -119,6 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28d75fb0bc62ae44790101d2222d0d1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 0
   identity: 0
   p2: 0
   hasMoved: 0
@@ -126,3 +127,25 @@ MonoBehaviour:
   y: 0
   legalMoves: []
   board: {fileID: 0}
+  currentPiece: {fileID: 0}
+  OffsetPos: {x: 0, y: 0, z: 0}
+  OffsetRotation: {x: 0, y: 0, z: 0, w: 0}
+  PiecesModels:
+  - {fileID: 0}
+  - {fileID: 4300000, guid: dc780bbe80163bc46883e8c2d96af493, type: 3}
+  - {fileID: 4300000, guid: b66f4744e8bb24a448fcfa81a1781df5, type: 3}
+  - {fileID: 4300000, guid: 5538ed982796ebd4c8cc731f2b530e42, type: 3}
+  - {fileID: 4300000, guid: 25f5852bdc32bf74790bd0cfd333a532, type: 3}
+  - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
+  - {fileID: 4300000, guid: 6a678404afed8a84499291f5b2dc6a73, type: 3}
+  - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
+  - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
+  - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
+  PiecesMaterials:
+  - {fileID: 0}
+  - {fileID: 2100000, guid: e251edffb431d1744bfb5d5e46554b8d, type: 2}
+  - {fileID: 2100000, guid: a2a47ae53c07e9d44bb705cec1323d7e, type: 2}
+  - {fileID: 2100000, guid: 6ea1ba22cf0de09408a8725e8db0a3ec, type: 2}
+  - {fileID: 2100000, guid: 67744e1f81d3f0c40b46b2eeb88951d9, type: 2}
+  - {fileID: 2100000, guid: af98ce4e2a67c194b8eb8ff0cfa08969, type: 2}
+  - {fileID: 2100000, guid: 4a512045a918e6f4cb4a872673d29301, type: 2}

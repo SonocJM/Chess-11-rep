@@ -4,34 +4,38 @@ using UnityEngine;
 public class GenerateBoard : MonoBehaviour
 {
     [Header("ints")]
-    public int TilesX; 
+    public int TilesX;
     public int TilesY;
     public int p1T;
     public int p2T;
 
     [Header("GameObjects")]
-    public GameObject tile; 
-    public GameObject[,] tiles; 
-    private GameObject lastHoveredTile; 
-    private GameObject clickedTile; 
+    public GameObject tile;
+    public GameObject[,] tiles;
+    private GameObject lastHoveredTile;
+    private GameObject clickedTile;
 
     [Header("Materials")]
-    public Material defaultMaterial; 
-    public Material highlightMaterial; 
+    public Material defaultMaterial;
+    public Material highlightMaterial;
     public Material clickMaterial;
 
     [Header("Scripts")]
     public GenerateBoard gB;
 
-
-    private bool isHoverEnabled = true; 
+    public bool mirror = false;
+    private bool isHoverEnabled = true;
 
     private void Awake()
     {
         tiles = new GameObject[TilesX, TilesY];
         GenerateAllTiles();
-        AssignPieces(1, false);
-        AssignPieces(1, true);
+        if (p1T == p2T)
+        {
+            p2T += 3;
+        }
+        AssignPieces(p1T, false);
+        AssignPieces(p2T, true);
     }
 
     private void GenerateAllTiles()
@@ -47,7 +51,7 @@ public class GenerateBoard : MonoBehaviour
 
     private void GenerateSingleTile(int x, int y)
     {
-        Vector3 position = new Vector3(x, 0, y); 
+        Vector3 position = new Vector3(x, 0, y);
         GameObject singleTile = Instantiate(tile, position, Quaternion.identity);
         singleTile.transform.SetParent(transform);
         singleTile.GetComponent<Renderer>().material = defaultMaterial;
@@ -55,15 +59,15 @@ public class GenerateBoard : MonoBehaviour
         tileS.board = gB;
         tileS.x = x;
         tileS.y = y;
-        tiles[x, y] = singleTile; 
+        tiles[x, y] = singleTile;
     }
 
     private void Update()
     {
         RaycastFromCamera();
-        
+
     }
-    
+
 
     private void RaycastFromCamera()
     {
@@ -94,7 +98,7 @@ public class GenerateBoard : MonoBehaviour
                             }
                         }
 
-                        if (Input.GetMouseButtonDown(0)) 
+                        if (Input.GetMouseButtonDown(0))
                         {
                             HandleTileClick(hoveredTile);
                         }
@@ -103,7 +107,7 @@ public class GenerateBoard : MonoBehaviour
                 }
             }
 
-            
+
             if (lastHoveredTile != null)
             {
                 lastHoveredTile.GetComponent<Renderer>().material = defaultMaterial;
@@ -112,7 +116,7 @@ public class GenerateBoard : MonoBehaviour
         }
         else
         {
-            
+
             if (lastHoveredTile != null)
             {
                 lastHoveredTile.GetComponent<Renderer>().material = defaultMaterial;
@@ -142,63 +146,76 @@ public class GenerateBoard : MonoBehaviour
         }
     }
 
-    private void AssignPieces(int team, bool p2)   
+    private void AssignPieces(int team, bool p2)
     {
-        int[] row1;
-        int[] row2;
-        int[] row3;
-        switch(team)
+        int[] row1 = new int[11];
+        int[] row2 = new int[11];
+        int[] row3 = new int[11];
+
+
+
+        switch (team)
         {
             case 0:
                 //no existe el equipo 0
                 break;
 
-                //rogue
-            case 1:
+            //rogue
+            case 1 or 4:
                 row1 = new int[11] { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2 };
                 row2 = new int[11] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
                 row3 = new int[11] { 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
-                if (!p2)
-                {
-
-                    for (int i = 0; i < 11; i++)
-                    {
-                        tiles[i, 0].GetComponent<Tile>().identity = row1[i];
-                        tiles[i, 0].GetComponent<Tile>().p2 = false;
-                    }
-                    for (int i = 0; i < 11; i++)
-                    {
-                        tiles[i, 1].GetComponent<Tile>().identity = row2[i];
-                        tiles[i, 1].GetComponent<Tile>().p2 = false;
-                    }
-                    for (int i = 0; i < 11; i++)
-                    {
-                        tiles[i, 2].GetComponent<Tile>().identity = row3[i];
-                        tiles[i, 2].GetComponent<Tile>().p2 = false;
-                    }
-
-
-                }
-                else
-                {
-                    for (int i = 0; i < 11; i++)
-                    {
-                        tiles[i, 10].GetComponent<Tile>().identity = row1[i];
-                        tiles[i, 10].GetComponent<Tile>().p2 = true;
-                    }
-                    for (int i = 0; i < 11; i++)
-                    {
-                        tiles[i, 9].GetComponent<Tile>().identity = row2[i];
-                        tiles[i, 9].GetComponent<Tile>().p2 = true;
-                    }
-                    for (int i = 0; i < 11; i++)
-                    {
-                        tiles[i, 8].GetComponent<Tile>().identity = row3[i];
-                        tiles[i, 8].GetComponent<Tile>().p2 = true;
-                    }
-                }
+                
                 break;
+        }
+        if (!p2)
+        {
+
+            for (int i = 0; i < 11; i++)
+            {
+                tiles[i, 0].GetComponent<Tile>().identity = row1[i];
+                tiles[i, 0].GetComponent<Tile>().p2 = false;
+                tiles[i, 0].GetComponent<Tile>().team = p1T;
+            }
+            for (int i = 0; i < 11; i++)
+            {
+                tiles[i, 1].GetComponent<Tile>().identity = row2[i];
+                tiles[i, 1].GetComponent<Tile>().p2 = false;
+                tiles[i, 1].GetComponent<Tile>().team = p1T;
+            }
+            for (int i = 0; i < 11; i++)
+            {
+                tiles[i, 2].GetComponent<Tile>().identity = row3[i];
+                tiles[i, 2].GetComponent<Tile>().p2 = false;
+                tiles[i, 2].GetComponent<Tile>().team = p1T;
+            }
+
+
+        }
+        else
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                tiles[i, 10].GetComponent<Tile>().identity = row1[i];
+                tiles[i, 10].GetComponent<Tile>().p2 = true;
+                tiles[i, 10].GetComponent<Tile>().team = p2T;
+            }
+            for (int i = 0; i < 11; i++)
+            {
+                tiles[i, 9].GetComponent<Tile>().identity = row2[i];
+                tiles[i, 9].GetComponent<Tile>().p2 = true;
+                tiles[i, 9].GetComponent<Tile>().team = p2T;
+            }
+            for (int i = 0; i < 11; i++)
+            {
+                tiles[i, 8].GetComponent<Tile>().identity = row3[i];
+                tiles[i, 8].GetComponent<Tile>().p2 = true;
+                tiles[i, 8].GetComponent<Tile>().team = p2T;
+
+            }
         }
 
     }
+    
+
 }

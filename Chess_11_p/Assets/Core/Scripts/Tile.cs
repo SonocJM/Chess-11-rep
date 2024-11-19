@@ -6,6 +6,7 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     [Header("information")]
+    public int team;
     public int identity;
     //secondary color
     public bool p2;
@@ -13,8 +14,19 @@ public class Tile : MonoBehaviour
     public int x;
     public int y;
     public List<Vector2Int> legalMoves = new List<Vector2Int>();
-
+    [Header("References")]
     public GenerateBoard board;
+    [Header("Actual Piece")]
+    public GameObject currentPiece;
+    public Vector3 OffsetPos;
+    public Quaternion OffsetRotation;
+    [Header("Pieces Models")]
+    public Mesh[] PiecesModels; 
+    [Header("Pieces Materials")]
+    public Material[] PiecesMaterials;
+    
+
+    
     // 0 = EMPTY
     // 1 = PAWN
     // 2 = ROOK
@@ -30,70 +42,37 @@ public class Tile : MonoBehaviour
     private void Start()
     {
         LegalMovesAssign(identity, x, y);
-    }
-    private void Update()
-    {
-        ChangePiece(identity, p2);
-        
+        SpawnPiece(p2);
+        ChangePiece(identity, team);
     }
 
-    private void ChangePiece(int id, bool team)
+    private void SpawnPiece(bool p2)
     {
-        switch(id)
+        // Crear un nuevo GameObject y asignarlo a currentPiece
+        currentPiece = new GameObject("Piece");
+        currentPiece.transform.SetParent(transform); // Hacerlo hijo del objeto actual
+        currentPiece.transform.localPosition = Vector3.zero; // Hereda la posición del padre
+        currentPiece.transform.localRotation = Quaternion.identity; // Hereda la rotación del padre
+        currentPiece.transform.localScale = new Vector3(90f, 10f, 90f);
+        currentPiece.AddComponent<MeshFilter>();     // Agregar el componente MeshFilter
+        currentPiece.AddComponent<MeshRenderer>();   // Agregar el componente MeshRenderer
+
+        // Aplicar rotación si es necesario
+        if (p2)
         {
-            case 0:
-                //CAMBIAR EL SPRITE
-                if(team)
-                {
-                    //jugador2
-                }
-                else
-                {
-                    //jugador1
-                }
-
-                break;
-            
-            case 1:
-
-                break;
-           
-            case 2:
-
-                break;
-            
-            case 3:
-
-                break;
-            
-            case 4:
-
-                break;
-
-            case 5:
-
-                break;
-
-            case 6:
-
-                break;
-            
-            case 7:
-
-                break;
-            
-            case 8:
-
-                break;
-            
-            case 9:
-
-                break;
-           
-            case 10:
-
-                break;
+            currentPiece.transform.rotation = Quaternion.Euler(0, 180, 0);
         }
+    }
+
+    
+
+    private void ChangePiece(int id, int team)
+    {
+        //CAMBIAR EL Modelo
+        MeshFilter meshFilter = currentPiece.GetComponent<MeshFilter>();
+        MeshRenderer meshRenderer = currentPiece.GetComponent<MeshRenderer>();
+        meshFilter.mesh = PiecesModels[id];
+        meshRenderer.material = PiecesMaterials[team];
     }
 
     private void LegalMovesAssign(int id, int x, int y)
