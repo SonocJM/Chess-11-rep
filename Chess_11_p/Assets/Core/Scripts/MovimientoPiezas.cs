@@ -9,11 +9,13 @@ public class MovimientoPiezas : MonoBehaviour
     public Material baseMaterial;
     public Material hoverMaterial;
     public Material clickMaterial;
+    public GameObject chessBoard;
     public bool p1T;
 
     private Tile selectedTile = null; // Casilla actualmente seleccionada
     private List<Tile> highlightedTiles = new List<Tile>(); // Movimientos legales resaltados
     private Camera mainCamera;
+    public float rotationSpeed = 90f;
 
     private void Awake()
     {
@@ -28,6 +30,27 @@ public class MovimientoPiezas : MonoBehaviour
     {
         HandleHover();
         HandleClick();
+    }
+    public void StartSmoothRotateY180()
+    {
+        StartCoroutine(RotateY180Smoothly());
+    }
+    private System.Collections.IEnumerator RotateY180Smoothly()
+    {
+        Quaternion startRotation = transform.rotation;
+        Quaternion endRotation = startRotation * Quaternion.Euler(0f, 180f, 0f);
+
+        float elapsedTime = 0f;
+        float duration = 180f / rotationSpeed; // Calculate duration based on speed
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            chessBoard.transform.rotation = Quaternion.Slerp(startRotation, endRotation, elapsedTime / duration);
+            yield return null;
+        }
+
+        transform.rotation = endRotation; // Ensure exact final rotation
     }
 
     private void HandleHover()
@@ -78,6 +101,7 @@ public class MovimientoPiezas : MonoBehaviour
                             p1T = false;
                         }
                         else { p1T = true; }
+                        StartSmoothRotateY180();
                     }
                     else
                     {
