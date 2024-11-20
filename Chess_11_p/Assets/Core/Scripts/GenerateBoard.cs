@@ -28,6 +28,8 @@ public class GenerateBoard : MonoBehaviour
 
     private void Awake()
     {
+        p1T = GameData.p1T;
+        p2T = GameData.p2T;
         tiles = new GameObject[TilesX, TilesY];
         GenerateAllTiles();
         if (p1T == p2T)
