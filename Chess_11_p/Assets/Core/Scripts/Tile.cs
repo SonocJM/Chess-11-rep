@@ -60,7 +60,7 @@ public class Tile : MonoBehaviour
         currentPiece.transform.SetParent(transform); // Hacerlo hijo del objeto actual
         currentPiece.transform.localPosition = Vector3.zero; // Hereda la posición del padre
         currentPiece.transform.localRotation = Quaternion.identity; // Hereda la rotación del padre
-        currentPiece.transform.localScale = new Vector3(90f, 10f, 90f);
+        //currentPiece.transform.localScale = new Vector3(90f, 10f, 90f);
         currentPiece.AddComponent<MeshFilter>();     // Agregar el componente MeshFilter
         currentPiece.AddComponent<MeshRenderer>();   // Agregar el componente MeshRenderer
 

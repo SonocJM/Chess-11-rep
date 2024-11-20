@@ -152,6 +152,17 @@ public class MovimientoPiezas : MonoBehaviour
     private void MovePiece(Tile targetTile)
     {
         // Transferir datos de la casilla seleccionada a la nueva
+        if(targetTile.identity == 6)
+        {
+            if(p1T)
+            {
+                Debug.Log("gano jugador uno");
+            }
+            else
+            {
+                Debug.Log("gano jugador 2");
+            }
+        }
         targetTile.team = selectedTile.team;
         targetTile.identity = selectedTile.identity;
         targetTile.p2 = selectedTile.p2;
