@@ -12,8 +12,7 @@ public class GenerateBoard : MonoBehaviour
     [Header("GameObjects")]
     public GameObject tile;
     public GameObject[,] tiles;
-    private GameObject lastHoveredTile;
-    private GameObject clickedTile;
+    
 
     [Header("Materials")]
     public Material defaultMaterial;
@@ -22,9 +21,14 @@ public class GenerateBoard : MonoBehaviour
 
     [Header("Scripts")]
     public GenerateBoard gB;
+    public MovimientoPiezas mP;
 
     public bool mirror = false;
-    private bool isHoverEnabled = true;
+    public int cDrogue;
+    public int cDnecro;
+    public int cDelem;
+    public int p1Cd;
+    public int p2Cd;
 
     private void Awake()
     {
@@ -32,6 +36,8 @@ public class GenerateBoard : MonoBehaviour
         p2T = GameData.p2T;
         tiles = new GameObject[TilesX, TilesY];
         GenerateAllTiles();
+        AssignCoolDowns(p1T, true);
+        AssignCoolDowns(p2T, false);
         if (p1T == p2T)
         {
             //maneja el mirror match
@@ -40,7 +46,41 @@ public class GenerateBoard : MonoBehaviour
         AssignPieces(p1T, false);
         AssignPieces(p2T, true);
     }
+    
+    public void AssignCoolDowns(int T, bool p1)
+    {
+        if (p1)
+        {
+            switch (T)
+            {
+                case 1 or 4:
+                    p1Cd = cDrogue;
+                    break;
+                case 2 or 5:
+                    p1Cd = cDnecro;
+                    break;
+                case 3 or 6:
+                    p1Cd = cDelem;
+                    break;
+            }
+        }
+        else
+        {
+            switch (T)
+            {
+                case 1 or 4:
+                    p2Cd = cDrogue;
+                    break;
+                case 2 or 5:
+                    p2Cd = cDnecro;
+                    break;
+                case 3 or 6:
+                    p2Cd = cDelem;
+                    break;
+            }
+        }
 
+    }
     private void GenerateAllTiles()
     {
         for (int x = 0; x < TilesX; x++)
@@ -56,6 +96,7 @@ public class GenerateBoard : MonoBehaviour
     {
         Vector3 position = new Vector3(x, 0, y);
         GameObject singleTile = Instantiate(tile, position, Quaternion.identity);
+
         singleTile.transform.SetParent(transform);
         singleTile.GetComponent<Renderer>().material = defaultMaterial;
         Tile tileS = singleTile.GetComponent<Tile>();
@@ -72,82 +113,7 @@ public class GenerateBoard : MonoBehaviour
     }
 
 
-    private void RaycastFromCamera()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            GameObject hoveredTile = hit.collider.gameObject;
-
-            for (int x = 0; x < TilesX; x++)
-            {
-                for (int y = 0; y < TilesY; y++)
-                {
-                    if (tiles[x, y] == hoveredTile)
-                    {
-                        if (isHoverEnabled)
-                        {
-                            if (hoveredTile != lastHoveredTile)
-                            {
-                                if (lastHoveredTile != null)
-                                {
-                                    lastHoveredTile.GetComponent<Renderer>().material = defaultMaterial;
-                                }
-
-                                hoveredTile.GetComponent<Renderer>().material = highlightMaterial;
-                                lastHoveredTile = hoveredTile;
-                            }
-                        }
-
-                        if (Input.GetMouseButtonDown(0))
-                        {
-                            HandleTileClick(hoveredTile);
-                        }
-                        return;
-                    }
-                }
-            }
-
-
-            if (lastHoveredTile != null)
-            {
-                lastHoveredTile.GetComponent<Renderer>().material = defaultMaterial;
-                lastHoveredTile = null;
-            }
-        }
-        else
-        {
-
-            if (lastHoveredTile != null)
-            {
-                lastHoveredTile.GetComponent<Renderer>().material = defaultMaterial;
-                lastHoveredTile = null;
-            }
-        }
-    }
-
-    private void HandleTileClick(GameObject clicked)
-    {
-        if (clickedTile == clicked)
-        {
-            clicked.GetComponent<Renderer>().material = defaultMaterial;
-            clickedTile = null;
-            isHoverEnabled = true;
-        }
-        else
-        {
-            if (clickedTile != null)
-            {
-                clickedTile.GetComponent<Renderer>().material = defaultMaterial;
-            }
-
-            clicked.GetComponent<Renderer>().material = clickMaterial;
-            clickedTile = clicked;
-            isHoverEnabled = false;
-        }
-    }
+    
 
     private void AssignPieces(int team, bool p2)
     {

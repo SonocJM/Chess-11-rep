@@ -10,16 +10,21 @@ public class MovimientoPiezas : MonoBehaviour
     public Material hoverMaterial;
     public Material clickMaterial;
     public GameObject chessBoard;
-    public bool p1T;
+    public bool p1Turn;
+    public bool usingAbility;
 
     private Tile selectedTile = null; // Casilla actualmente seleccionada
     private List<Tile> highlightedTiles = new List<Tile>(); // Movimientos legales resaltados
     private Camera mainCamera;
     public float rotationSpeed = 90f;
+    public int abilityIndex;
+    
 
     private void Awake()
     {
-        p1T = true;
+        usingAbility = false;
+        p1Turn = true;
+        
     }
     private void Start()
     {
@@ -81,28 +86,51 @@ public class MovimientoPiezas : MonoBehaviour
                 Tile tile = hit.collider.GetComponent<Tile>();
                 if (tile != null)
                 {
+                    if (tile.isHighlighted && usingAbility)
+                    {
+                        UseAbility(tile);
+                        if (board.p1Cd > 0) { board.p1Cd--; }
+                        if (board.p2Cd > 0) { board.p2Cd--; }
+                        if (p1Turn)
+                        {
+                            board.p1Cd = board.cDrogue;
+                            p1Turn = false;
+
+                        }
+                        else 
+                        {
+                            board.AssignCoolDowns(board.p1T,p1Turn);
+                            p1Turn = true; 
+                        }
+                        
+                        StartSmoothRotateY180();
+                    }
                     if (selectedTile == null && tile.identity != 0) // Seleccionar una pieza
                     {
-                        if(!tile.p2 && p1T)
+                        if(!tile.p2 && p1Turn)
                         {
                             SelectTile(tile);
                         }
-                        if (tile.p2 && !p1T)
+                        if (tile.p2 && !p1Turn)
                         {
                             SelectTile(tile);
                         }
                         
                     }
-                    else if (tile.isHighlighted) // Mover pieza
+                    
+                    else if (tile.isHighlighted && !usingAbility) // Mover pieza
                     {
                         MovePiece(tile);
-                        if(p1T)
+                        if(p1Turn)
                         {
-                            p1T = false;
+                            p1Turn = false;
                         }
-                        else { p1T = true; }
+                        else { p1Turn = true; }
+                        if (board.p1Cd > 0) { board.p1Cd--; }
+                        if (board.p2Cd > 0) { board.p2Cd--; }
                         StartSmoothRotateY180();
                     }
+                    
                     else
                     {
                         // Deseleccionar si se hace clic en un lugar no válido
@@ -113,8 +141,93 @@ public class MovimientoPiezas : MonoBehaviour
         }
     }
 
+    public void ChangeTurn()
+    {
+
+    }
+    public void AbilityButton(bool p2)
+    {
+        ResetAllTiles();
+        ClearHighlights();
+        bool canCast = false;
+
+        if (p1Turn != p2 )
+        {
+            usingAbility = true;
+
+            int playerTeam;
+            if (!p2)
+            {
+                playerTeam = board.p1T;
+                if(board.p1Cd == 0)
+                {
+                    canCast = true;
+                }
+                
+            }
+            else
+            {
+                playerTeam = board.p2T;
+                if (board.p2Cd == 0)
+                {
+                    canCast = true;
+                }
+            }
+
+            if(canCast)
+            {
+                switch (playerTeam)
+                {
+                    //rogue
+                    case 1 or 4:
+                        for (int i = 0; i < 11; i++)
+                        {
+                            for (int j = 0; j < 11; j++)
+                            {
+                                if (board.tiles[i, j].GetComponent<Tile>().p2 != p2 && board.tiles[i, j].GetComponent<Tile>().identity != 6)
+                                {
+                                    if (board.tiles[i, j].GetComponent<Tile>().identity != 0)
+                                    {
+                                        board.tiles[i, j].GetComponent<Renderer>().material = clickMaterial;
+                                        board.tiles[i, j].GetComponent<Tile>().isHighlighted = true;
+                                        highlightedTiles.Add(board.tiles[i, j].GetComponent<Tile>());
+                                    }
+
+                                }
+                            }
+                        }
+                        abilityIndex = 1;
+
+                        break;
+                        //necromancer
+                        //elementalist
+                }
+            }
+            
+        }
+       
+        
+
+    }
+    public void UseAbility(Tile targetTile)
+    {
+        usingAbility = false;
+        switch(abilityIndex)
+        {
+            //rogue cast
+            case 1:
+                targetTile.identity = 0;
+                UpdateAllTiles();
+                DeselectTile();
+                ClearHighlights();
+                break;
+        }
+        
+    }
+
     private void SelectTile(Tile tile)
     {
+        usingAbility = false;
         selectedTile = tile;
         HighlightLegalMoves(tile); // Iluminar movimientos legales
     }
@@ -152,9 +265,9 @@ public class MovimientoPiezas : MonoBehaviour
     private void MovePiece(Tile targetTile)
     {
         // Transferir datos de la casilla seleccionada a la nueva
-        if(targetTile.identity == 6)
+        if(targetTile.identity == 6) //detectar quien gano
         {
-            if(p1T)
+            if(p1Turn)
             {
                 Debug.Log("gano jugador uno");
             }
@@ -166,7 +279,24 @@ public class MovimientoPiezas : MonoBehaviour
         targetTile.team = selectedTile.team;
         targetTile.identity = selectedTile.identity;
         targetTile.p2 = selectedTile.p2;
-        
+        //limitar al peon
+        targetTile.hasMoved = true;
+        //registrar casillas con piezas muertas para el necromancer
+        if (targetTile.identity != 0 && targetTile.identity != 1)
+        {
+            if(!targetTile.p2DiedHere && !targetTile.p1DiedHere)
+            {
+                if (targetTile.p2)
+                {
+                    targetTile.p2DiedHere = true;
+                }
+                else
+                {
+                    targetTile.p1DiedHere = true;
+                }
+            }
+        }
+
 
         // Limpiar la casilla original
         selectedTile.team = 0;
@@ -180,6 +310,7 @@ public class MovimientoPiezas : MonoBehaviour
 
         // Limpiar selección
         DeselectTile();
+        ClearHighlights();
     }
 
     private void UpdateAllTiles()

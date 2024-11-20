@@ -8,6 +8,8 @@ public class Tile : MonoBehaviour
     [Header("information")]
     public int team;
     public int identity;
+    public bool p1DiedHere;
+    public bool p2DiedHere;
     public bool isHighlighted = false;
     //secondary color
     public bool p2;
@@ -42,17 +44,15 @@ public class Tile : MonoBehaviour
 
     private void Start()
     {
+        p1DiedHere = false;
+        p2DiedHere = false;
         LegalMovesAssign();
         SpawnPiece(p2);
         ChangePiece();
     }
     
 
-    public List<Vector2Int> GetLegalMoves()
-    {
-        // Lógica para calcular movimientos legales
-        return new List<Vector2Int>(); // Reemplazar con lógica real
-    }
+    
     private void SpawnPiece(bool p2)
     {
         // Crear un nuevo GameObject y asignarlo a currentPiece
@@ -64,11 +64,7 @@ public class Tile : MonoBehaviour
         currentPiece.AddComponent<MeshFilter>();     // Agregar el componente MeshFilter
         currentPiece.AddComponent<MeshRenderer>();   // Agregar el componente MeshRenderer
 
-        // Aplicar rotación si es necesario
-        if (p2)
-        {
-            currentPiece.transform.rotation = Quaternion.Euler(0, 180, 0);
-        }
+        
     }
 
     
@@ -80,6 +76,11 @@ public class Tile : MonoBehaviour
         MeshRenderer meshRenderer = currentPiece.GetComponent<MeshRenderer>();
         meshFilter.mesh = PiecesModels[identity];
         meshRenderer.material = PiecesMaterials[team];
+        //arreglar rotacion
+        if (p2)
+        {
+            currentPiece.transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
     }
 
     public void LegalMovesAssign()
