@@ -9,11 +9,16 @@ public class MovimientoPiezas : MonoBehaviour
     public Material baseMaterial;
     public Material hoverMaterial;
     public Material clickMaterial;
+    public bool p1T;
 
     private Tile selectedTile = null; // Casilla actualmente seleccionada
     private List<Tile> highlightedTiles = new List<Tile>(); // Movimientos legales resaltados
     private Camera mainCamera;
 
+    private void Awake()
+    {
+        p1T = true;
+    }
     private void Start()
     {
         mainCamera = Camera.main;
@@ -55,11 +60,24 @@ public class MovimientoPiezas : MonoBehaviour
                 {
                     if (selectedTile == null && tile.identity != 0) // Seleccionar una pieza
                     {
-                        SelectTile(tile);
+                        if(!tile.p2 && p1T)
+                        {
+                            SelectTile(tile);
+                        }
+                        if (tile.p2 && !p1T)
+                        {
+                            SelectTile(tile);
+                        }
+                        
                     }
                     else if (tile.isHighlighted) // Mover pieza
                     {
                         MovePiece(tile);
+                        if(p1T)
+                        {
+                            p1T = false;
+                        }
+                        else { p1T = true; }
                     }
                     else
                     {
