@@ -199,7 +199,36 @@ public class MovimientoPiezas : MonoBehaviour
                         abilityIndex = 1;
 
                         break;
-                        //necromancer
+                    //necromancer
+                    case 2 or 5:
+                        for (int i = 0; i < 11; i++)
+                        {
+                            for (int j = 0; j < 11; j++)
+                            {
+                                if (!p2)
+                                {
+                                    if (board.tiles[i, j].GetComponent<Tile>().p1DiedHere && board.tiles[i, j].GetComponent<Tile>().identity != 6)
+                                    {
+                                            board.tiles[i, j].GetComponent<Renderer>().material = clickMaterial;
+                                            board.tiles[i, j].GetComponent<Tile>().isHighlighted = true;
+                                            highlightedTiles.Add(board.tiles[i, j].GetComponent<Tile>());
+                                    }
+
+                                }
+                                else
+                                {
+                                    if (board.tiles[i, j].GetComponent<Tile>().p2DiedHere && board.tiles[i, j].GetComponent<Tile>().identity != 6)
+                                    {   
+                                        board.tiles[i, j].GetComponent<Renderer>().material = clickMaterial;
+                                        board.tiles[i, j].GetComponent<Tile>().isHighlighted = true;
+                                        highlightedTiles.Add(board.tiles[i, j].GetComponent<Tile>());    
+                                    }
+                                }
+                            }
+                        }
+                        abilityIndex = 2;
+                        break;
+
                         //elementalist
                 }
             }
@@ -217,12 +246,40 @@ public class MovimientoPiezas : MonoBehaviour
             //rogue cast
             case 1:
                 targetTile.identity = 0;
-                UpdateAllTiles();
-                DeselectTile();
-                ClearHighlights();
+                
                 break;
+            case 2:
+                for (int i = 0; i < 11; i++)
+                {
+                    for (int j = 0; j < 11; j++)
+                    {
+                        if (p1Turn)
+                        {
+                            if (board.tiles[i, j].GetComponent<Tile>().p1DiedHere && board.tiles[i, j].GetComponent<Tile>().identity != 6)
+                            {
+                                board.tiles[i,j].GetComponent<Tile>().identity = 6;
+                                board.tiles[i, j].GetComponent<Tile>().p2 = false;
+                                board.tiles[i, j].GetComponent<Tile>().team = board.p1T;
+                            }
+
+                        }
+                        else
+                        {
+                            if (board.tiles[i, j].GetComponent<Tile>().p2DiedHere && board.tiles[i, j].GetComponent<Tile>().identity != 6)
+                            {
+                                board.tiles[i, j].GetComponent<Tile>().identity = 6;
+                                board.tiles[i, j].GetComponent<Tile>().p2 = true;
+                                board.tiles[i, j].GetComponent<Tile>().team = board.p2T;
+                            }
+                        }
+                    }
+                }
+                break; 
         }
-        
+        UpdateAllTiles();
+        DeselectTile();
+        ClearHighlights();
+
     }
 
     private void SelectTile(Tile tile)
@@ -276,15 +333,11 @@ public class MovimientoPiezas : MonoBehaviour
                 Debug.Log("gano jugador 2");
             }
         }
-        targetTile.team = selectedTile.team;
-        targetTile.identity = selectedTile.identity;
-        targetTile.p2 = selectedTile.p2;
-        //limitar al peon
-        targetTile.hasMoved = true;
         //registrar casillas con piezas muertas para el necromancer
-        if (targetTile.identity != 0 && targetTile.identity != 1)
+        if (targetTile.identity != 0 && targetTile.identity != 1 )
         {
-            if(!targetTile.p2DiedHere && !targetTile.p1DiedHere)
+
+            if (!targetTile.p2DiedHere && !targetTile.p1DiedHere)
             {
                 if (targetTile.p2)
                 {
@@ -296,6 +349,12 @@ public class MovimientoPiezas : MonoBehaviour
                 }
             }
         }
+        targetTile.team = selectedTile.team;
+        targetTile.identity = selectedTile.identity;
+        targetTile.p2 = selectedTile.p2;
+        //limitar al peon
+        targetTile.hasMoved = true;
+        
 
 
         // Limpiar la casilla original

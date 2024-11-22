@@ -134,6 +134,10 @@ public class GenerateBoard : MonoBehaviour
                 row1 = new int[11] { 1, 3, 2, 3, 5, 3, 6, 3, 2, 3, 1 };
                 row2 = new int[11] { 0, 1, 1, 2, 1, 7, 1, 2, 1, 1, 0 };
                 row3 = new int[11] { 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 };
+                
+                //row1 = new int[11] { 1, 3, 2, 3, 5, 3, 6, 3, 2, 3, 1 };
+                //row2 = new int[11] { 0, 1, 1, 2, 1, 7, 1, 2, 1, 1, 0 };
+                //row3 = new int[11] { 0, 3, 3, 5, 3, 6, 3, 6, 5, 3, 0 };
 
                 break;
 

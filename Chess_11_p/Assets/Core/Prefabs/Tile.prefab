@@ -121,6 +121,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team: 0
   identity: 0
+  p1DiedHere: 0
+  p2DiedHere: 0
   isHighlighted: 0
   p2: 0
   hasMoved: 0
@@ -135,10 +137,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 4300000, guid: dc780bbe80163bc46883e8c2d96af493, type: 3}
   - {fileID: 4300000, guid: b66f4744e8bb24a448fcfa81a1781df5, type: 3}
-  - {fileID: -2720935500044092856, guid: 9daecbd5dd82e9b4681bfc968a2eda1a, type: 3}
+  - {fileID: 4300000, guid: 5538ed982796ebd4c8cc731f2b530e42, type: 3}
   - {fileID: 4300000, guid: 25f5852bdc32bf74790bd0cfd333a532, type: 3}
-  - {fileID: -3696942731509759843, guid: 3477531da87314f4587700b36bbbf620, type: 3}
-  - {fileID: -1729718815161039410, guid: bd677ceda29c98942ac5b81d330f104c, type: 3}
+  - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
+  - {fileID: 4300000, guid: 6a678404afed8a84499291f5b2dc6a73, type: 3}
   - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
   - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
   - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
