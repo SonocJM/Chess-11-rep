@@ -11,6 +11,7 @@ public class Tile : MonoBehaviour
     public bool p1DiedHere;
     public bool p2DiedHere;
     public bool isHighlighted = false;
+    public bool portal = false;
     //secondary color
     public bool p2;
     public bool hasMoved = false;
@@ -189,7 +190,9 @@ public class Tile : MonoBehaviour
             case 7: // Rogue
                 Vector2Int[] rogueMoves = {
                 new Vector2Int(3, 0), new Vector2Int(-3, 0), // Movimiento horizontal
-                new Vector2Int(0, 3), new Vector2Int(0, -3)  // Movimiento vertical
+                new Vector2Int(0, 3), new Vector2Int(0, -3),  // Movimiento vertical
+                new Vector2Int(2,2), new Vector2Int(-2, 2), 
+                new Vector2Int(-2, -2),new Vector2Int(2, -2)
             };
 
                 foreach (Vector2Int move in rogueMoves)
@@ -218,9 +221,11 @@ public class Tile : MonoBehaviour
                 break;
 
             case 8: // Necromancer
+                int NecromoveDirection = p2 ? 1 : -1; // Dirección según el equipo
+                int NecromoveDirectionBack = p2 ? -1 : 1;
                 Vector2Int[] necroMoves = {
                 new Vector2Int(1, 0), new Vector2Int(-1, 0),  // Movimiento horizontal
-                new Vector2Int(0, -1), new Vector2Int(-1, -1), new Vector2Int(1, -1) // Movimiento hacia atrás
+                new Vector2Int(0, NecromoveDirection), new Vector2Int(-1, NecromoveDirection), new Vector2Int(1, NecromoveDirection) // Movimiento hacia atrás
             };
 
                 foreach (Vector2Int move in necroMoves)
@@ -230,7 +235,7 @@ public class Tile : MonoBehaviour
 
                 // Capturas de Necromancer (solo hacia adelante)
                 Vector2Int[] necroCaptures = {
-                new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(-1, 1) // Captura hacia adelante
+                new Vector2Int(0, NecromoveDirectionBack), new Vector2Int(1, NecromoveDirectionBack), new Vector2Int(-1, NecromoveDirectionBack) // Captura hacia adelante
             };
 
                 foreach (Vector2Int captureMove in necroCaptures)
@@ -248,25 +253,24 @@ public class Tile : MonoBehaviour
                 break;
 
             case 9: // Elementalist
-                Vector2Int[] elementalMoves = {
-                new Vector2Int(1, 0), new Vector2Int(-1, 0), // Movimiento horizontal y vertical
-                new Vector2Int(0, 1), new Vector2Int(0, -1)
+
+
+                Vector2Int[] wizCaptures = {
+                new Vector2Int(4, 4), new Vector2Int(-4, 4),
+                new Vector2Int(4, -4), new Vector2Int(-4, -4)
             };
 
-                foreach (Vector2Int move in elementalMoves)
+                foreach (Vector2Int captureMove in wizCaptures)
                 {
-                    AddMovesIfValid(pos + move, legalMoves);
-                }
-
-                // Capturas del Elementalist (como un alfil, en diagonal)
-                Vector2Int[] elementalCaptures = {
-                new Vector2Int(1, 1), new Vector2Int(-1, 1),
-                new Vector2Int(1, -1), new Vector2Int(-1, -1)
-            };
-
-                foreach (Vector2Int captureMove in elementalCaptures)
-                {
-                    AddLinearCaptures(pos, legalMoves, captureMove);
+                    Vector2Int capturePos = pos + captureMove;
+                    if (IsValidMove(capturePos))
+                    {
+                        Tile targetTile = board.tiles[capturePos.x, capturePos.y].GetComponent<Tile>();
+                        if (targetTile.identity != 0 && targetTile.p2 != p2)
+                        {
+                            legalMoves.Add(capturePos);
+                        }
+                    }
                 }
                 break;
         }

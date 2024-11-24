@@ -18,6 +18,7 @@ public class GenerateBoard : MonoBehaviour
     public Material defaultMaterial;
     public Material highlightMaterial;
     public Material clickMaterial;
+    public Material wizardPortal;
 
     [Header("Scripts")]
     public GenerateBoard gB;

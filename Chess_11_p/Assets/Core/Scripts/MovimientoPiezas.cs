@@ -12,16 +12,22 @@ public class MovimientoPiezas : MonoBehaviour
     public GameObject chessBoard;
     public bool p1Turn;
     public bool usingAbility;
+    public bool wizAbility;
+    public bool wizAbility2;
+
 
     private Tile selectedTile = null; // Casilla actualmente seleccionada
+    private Tile WizselectedTile = null;
     private List<Tile> highlightedTiles = new List<Tile>(); // Movimientos legales resaltados
     private Camera mainCamera;
     public float rotationSpeed = 90f;
     public int abilityIndex;
+    public UIChessBoard ui;
     
 
     private void Awake()
     {
+        wizAbility2 = false;
         usingAbility = false;
         p1Turn = true;
         
@@ -86,27 +92,58 @@ public class MovimientoPiezas : MonoBehaviour
                 Tile tile = hit.collider.GetComponent<Tile>();
                 if (tile != null)
                 {
-                    if (tile.isHighlighted && usingAbility)
+                    if(tile.isHighlighted && wizAbility)
                     {
-                        UseAbility(tile);
+                        WizselectedTile = tile;
+                        WizselectedTile.GetComponent<Renderer>().material = board.wizardPortal;
+                        wizAbility = false;
+                        wizAbility2 = true;
+                    }
+                    else if(tile.isHighlighted && wizAbility2)
+                    {
+                        Debug.Log("cast wiz");
+                        WizAbilityCast(tile);
                         if (board.p1Cd > 0) { board.p1Cd--; }
                         if (board.p2Cd > 0) { board.p2Cd--; }
+                        ui.UpdateUI();
                         if (p1Turn)
                         {
-                            board.p1Cd = board.cDrogue;
+                            
+                            p1Turn = false;
+
+                        }
+                        else
+                        {
+                            board.AssignCoolDowns(board.p1T, p1Turn);
+                            p1Turn = true;
+                        }
+                        wizAbility2 = false;
+                        StartSmoothRotateY180();
+                    }
+                    if (tile.isHighlighted && usingAbility)
+                    {
+                        UseAbility(tile, null);
+                        if (board.p1Cd > 0) { board.p1Cd--; }
+                        if (board.p2Cd > 0) { board.p2Cd--; }
+                        
+                        if (p1Turn)
+                        {
+                            board.AssignCoolDowns(board.p1T, p1Turn);
                             p1Turn = false;
 
                         }
                         else 
                         {
-                            board.AssignCoolDowns(board.p1T,p1Turn);
+                            board.AssignCoolDowns(board.p2T, p1Turn);
                             p1Turn = true; 
                         }
-                        
+                        ui.UpdateUI();
                         StartSmoothRotateY180();
                     }
-                    if (selectedTile == null && tile.identity != 0) // Seleccionar una pieza
+                    if (selectedTile == null && tile.identity != 0 && !wizAbility && !wizAbility2) // Seleccionar una pieza
                     {
+                        WizselectedTile = null;
+                        wizAbility = false;
                         if(!tile.p2 && p1Turn)
                         {
                             SelectTile(tile);
@@ -118,7 +155,7 @@ public class MovimientoPiezas : MonoBehaviour
                         
                     }
                     
-                    else if (tile.isHighlighted && !usingAbility) // Mover pieza
+                    else if ( tile.isHighlighted && !usingAbility ) // Mover pieza
                     {
                         MovePiece(tile);
                         if(p1Turn)
@@ -128,6 +165,7 @@ public class MovimientoPiezas : MonoBehaviour
                         else { p1Turn = true; }
                         if (board.p1Cd > 0) { board.p1Cd--; }
                         if (board.p2Cd > 0) { board.p2Cd--; }
+                        ui.UpdateUI();
                         StartSmoothRotateY180();
                     }
                     
@@ -135,15 +173,49 @@ public class MovimientoPiezas : MonoBehaviour
                     {
                         // Deseleccionar si se hace clic en un lugar no válido
                         DeselectTile();
+                        wizAbility = false;
+                        wizAbility2 = false;
                     }
+                }
+                else
+                {
+                    DeselectTile();
+                    wizAbility = false;
+                    wizAbility2 = false;
+                    usingAbility = false;
                 }
             }
         }
     }
 
-    public void ChangeTurn()
+    public void WizAbilityCast(Tile targetTile)
     {
 
+        int tempTeam = targetTile.team;
+        int tempIdentity = targetTile.identity;
+        bool tempP2 = targetTile.p2;
+        
+        targetTile.team = WizselectedTile.team;
+        targetTile.identity = WizselectedTile.identity;
+        targetTile.p2 = WizselectedTile.p2;
+        
+        
+
+
+
+        // Limpiar la casilla original
+        WizselectedTile.team = tempTeam;
+        WizselectedTile.identity = tempIdentity;
+        WizselectedTile.p2 = tempP2;
+        // Actualizar las piezas visualmente
+        UpdateAllTiles();
+
+
+
+        WizselectedTile = null; 
+        // Limpiar selección
+        DeselectTile();
+        ClearHighlights();
     }
     public void AbilityButton(bool p2)
     {
@@ -153,7 +225,7 @@ public class MovimientoPiezas : MonoBehaviour
 
         if (p1Turn != p2 )
         {
-            usingAbility = true;
+            
 
             int playerTeam;
             if (!p2)
@@ -180,13 +252,15 @@ public class MovimientoPiezas : MonoBehaviour
                 {
                     //rogue
                     case 1 or 4:
+                        usingAbility = true;
                         for (int i = 0; i < 11; i++)
                         {
                             for (int j = 0; j < 11; j++)
+                                
                             {
                                 if (board.tiles[i, j].GetComponent<Tile>().p2 != p2 && board.tiles[i, j].GetComponent<Tile>().identity != 6)
                                 {
-                                    if (board.tiles[i, j].GetComponent<Tile>().identity != 0)
+                                    if (board.tiles[i, j].GetComponent<Tile>().identity != 0 && board.tiles[i, j].GetComponent<Tile>().identity != 5)
                                     {
                                         board.tiles[i, j].GetComponent<Renderer>().material = clickMaterial;
                                         board.tiles[i, j].GetComponent<Tile>().isHighlighted = true;
@@ -201,6 +275,7 @@ public class MovimientoPiezas : MonoBehaviour
                         break;
                     //necromancer
                     case 2 or 5:
+                        usingAbility = true;
                         for (int i = 0; i < 11; i++)
                         {
                             for (int j = 0; j < 11; j++)
@@ -228,8 +303,26 @@ public class MovimientoPiezas : MonoBehaviour
                         }
                         abilityIndex = 2;
                         break;
+                    //elementalist
+                    case 3 or 6:
+                        wizAbility = true;
+                        selectedTile = null;
+                        for (int i = 0; i < 11; i++)
+                        {
+                            for (int j = 0; j < 11; j++)
+                            {
+                                if (board.tiles[i, j].GetComponent<Tile>().identity != 6 && board.tiles[i, j].GetComponent<Tile>().identity != 0)
+                                {
+                                    board.tiles[i, j].GetComponent<Renderer>().material = clickMaterial;
+                                    board.tiles[i, j].GetComponent<Tile>().isHighlighted = true;
+                                    highlightedTiles.Add(board.tiles[i, j].GetComponent<Tile>());
+                                }
+                            }
+                            wizAbility = true;
+                        }
+                        break;
 
-                        //elementalist
+                        
                 }
             }
             
@@ -238,16 +331,20 @@ public class MovimientoPiezas : MonoBehaviour
         
 
     }
-    public void UseAbility(Tile targetTile)
+    public void UseAbility(Tile targetTile, Tile targetTile2)
     {
         usingAbility = false;
+        
         switch(abilityIndex)
+
         {
+            
             //rogue cast
             case 1:
                 targetTile.identity = 0;
                 
                 break;
+                //necro cast
             case 2:
                 for (int i = 0; i < 11; i++)
                 {
@@ -274,7 +371,10 @@ public class MovimientoPiezas : MonoBehaviour
                         }
                     }
                 }
-                break; 
+                break;
+            
+            
+            
         }
         UpdateAllTiles();
         DeselectTile();
@@ -282,15 +382,21 @@ public class MovimientoPiezas : MonoBehaviour
 
     }
 
+    
+
     private void SelectTile(Tile tile)
     {
         usingAbility = false;
+        wizAbility = false;
+        wizAbility2 = false;
         selectedTile = tile;
+        WizselectedTile = null;
         HighlightLegalMoves(tile); // Iluminar movimientos legales
     }
 
     private void DeselectTile()
     {
+        WizselectedTile = null;
         selectedTile = null;
         ClearHighlights();
     }
@@ -349,6 +455,7 @@ public class MovimientoPiezas : MonoBehaviour
                 }
             }
         }
+        
         targetTile.team = selectedTile.team;
         targetTile.identity = selectedTile.identity;
         targetTile.p2 = selectedTile.p2;

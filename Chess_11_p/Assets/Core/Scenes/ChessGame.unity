@@ -279,8 +279,11 @@ MonoBehaviour:
   chessBoard: {fileID: 793114339}
   p1Turn: 0
   usingAbility: 0
+  wizAbility: 0
+  wizAbility2: 0
   rotationSpeed: 180
   abilityIndex: 0
+  ui: {fileID: 1865159861}
 --- !u!1 &537879710
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,7 +536,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 129.9856, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -584,12 +587,13 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: 4dac8c3b3935f394a92b93b2488b991b, type: 2}
   highlightMaterial: {fileID: 2100000, guid: 2e840c33425c6914abab06b54a2e72d0, type: 2}
   clickMaterial: {fileID: 2100000, guid: 5fbd498f7edcd5f4a9da4c9765164538, type: 2}
+  wizardPortal: {fileID: 2100000, guid: 7975b62b30572764dba320bda6228434, type: 2}
   gB: {fileID: 691991067}
   mP: {fileID: 456283623}
   mirror: 0
-  cDrogue: 10
+  cDrogue: 0
   cDnecro: 30
-  cDelem: 0
+  cDelem: 6
   p1Cd: 0
   p2Cd: 0
 --- !u!4 &691991068
@@ -895,6 +899,7 @@ GameObject:
   - component: {fileID: 1865159859}
   - component: {fileID: 1865159858}
   - component: {fileID: 1865159857}
+  - component: {fileID: 1865159861}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -986,6 +991,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1865159861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865159856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6eaa8ab40f0af642a5cea1bc7e7058f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownP1: {fileID: 1975578367}
+  cooldownP2: {fileID: 636693959}
+  cB: {fileID: 691991067}
 --- !u!1 &1904606929
 GameObject:
   m_ObjectHideFlags: 0
@@ -1276,7 +1296,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 132.07367, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
