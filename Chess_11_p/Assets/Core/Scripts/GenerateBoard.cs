@@ -43,6 +43,7 @@ public class GenerateBoard : MonoBehaviour
         {
             //maneja el mirror match
             p2T += 3;
+            mirror = true;
         }
         AssignPieces(p1T, false);
         AssignPieces(p2T, true);

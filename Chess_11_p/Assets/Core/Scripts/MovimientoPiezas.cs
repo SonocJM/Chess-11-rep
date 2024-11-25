@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public class MovimientoPiezas : MonoBehaviour
     public bool usingAbility;
     public bool wizAbility;
     public bool wizAbility2;
+    public bool stoppedRotating;
 
 
     private Tile selectedTile = null; // Casilla actualmente seleccionada
@@ -27,6 +29,7 @@ public class MovimientoPiezas : MonoBehaviour
 
     private void Awake()
     {
+        stoppedRotating = true;
         wizAbility2 = false;
         usingAbility = false;
         p1Turn = true;
@@ -42,12 +45,18 @@ public class MovimientoPiezas : MonoBehaviour
         HandleHover();
         HandleClick();
     }
-    public void StartSmoothRotateY180()
+    public void StartSmoothRotateY180(float waitSeconds)
     {
-        StartCoroutine(RotateY180Smoothly());
+        StartCoroutine(RotateY180Smoothly(waitSeconds));
     }
-    private System.Collections.IEnumerator RotateY180Smoothly()
+
+    private System.Collections.IEnumerator RotateY180Smoothly(float waitSeconds)
     {
+        stoppedRotating = false;
+        ClearHighlights();
+        // Wait for the specified delay before starting the rotation
+        yield return new WaitForSeconds(waitSeconds);
+
         Quaternion startRotation = transform.rotation;
         Quaternion endRotation = startRotation * Quaternion.Euler(0f, 180f, 0f);
 
@@ -62,6 +71,9 @@ public class MovimientoPiezas : MonoBehaviour
         }
 
         transform.rotation = endRotation; // Ensure exact final rotation
+        ClearHighlights();
+        stoppedRotating=true;
+
     }
 
     private void HandleHover()
@@ -84,7 +96,7 @@ public class MovimientoPiezas : MonoBehaviour
 
     private void HandleClick()
     {
-        if (Input.GetMouseButtonDown(0)) // Botón izquierdo
+        if (Input.GetMouseButtonDown(0) && stoppedRotating) // Botón izquierdo
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
@@ -105,20 +117,22 @@ public class MovimientoPiezas : MonoBehaviour
                         WizAbilityCast(tile);
                         if (board.p1Cd > 0) { board.p1Cd--; }
                         if (board.p2Cd > 0) { board.p2Cd--; }
-                        ui.UpdateUI();
+                        
                         if (p1Turn)
                         {
-                            
+                            board.AssignCoolDowns(board.p1T, p1Turn);
                             p1Turn = false;
 
                         }
                         else
                         {
-                            board.AssignCoolDowns(board.p1T, p1Turn);
+                            board.AssignCoolDowns(board.p2T, p1Turn);
                             p1Turn = true;
                         }
                         wizAbility2 = false;
-                        StartSmoothRotateY180();
+                        ui.UpdateUI();
+                        ClearHighlights();
+                        StartSmoothRotateY180(5);
                     }
                     if (tile.isHighlighted && usingAbility)
                     {
@@ -138,7 +152,7 @@ public class MovimientoPiezas : MonoBehaviour
                             p1Turn = true; 
                         }
                         ui.UpdateUI();
-                        StartSmoothRotateY180();
+                        StartSmoothRotateY180(2.5f);
                     }
                     if (selectedTile == null && tile.identity != 0 && !wizAbility && !wizAbility2) // Seleccionar una pieza
                     {
@@ -166,7 +180,7 @@ public class MovimientoPiezas : MonoBehaviour
                         if (board.p1Cd > 0) { board.p1Cd--; }
                         if (board.p2Cd > 0) { board.p2Cd--; }
                         ui.UpdateUI();
-                        StartSmoothRotateY180();
+                        StartSmoothRotateY180(1.5f);
                     }
                     
                     else
@@ -187,10 +201,26 @@ public class MovimientoPiezas : MonoBehaviour
             }
         }
     }
+    public void WizardAnimCast(Tile targetTile, Tile currentTile)
+    {
+        targetTile.SpawnWizAnimation(2);
+        currentTile.SpawnWizAnimation(2);
+
+        StartCoroutine(WaitAndDeSpawnWizAnimations(targetTile, currentTile));
+    }
+
+    private IEnumerator WaitAndDeSpawnWizAnimations(Tile targetTile, Tile currentTile)
+    {
+        yield return new WaitForSeconds(3); // Espera 5 segundos
+        UpdateAllTiles();
+        yield return new WaitForSeconds(2);
+        targetTile.DeSpawnWizAnimation(); // Desactiva la animación después de la espera
+        currentTile.DeSpawnWizAnimation();
+    }
 
     public void WizAbilityCast(Tile targetTile)
     {
-
+        WizardAnimCast(targetTile, WizselectedTile);
         int tempTeam = targetTile.team;
         int tempIdentity = targetTile.identity;
         bool tempP2 = targetTile.p2;
@@ -208,7 +238,7 @@ public class MovimientoPiezas : MonoBehaviour
         WizselectedTile.identity = tempIdentity;
         WizselectedTile.p2 = tempP2;
         // Actualizar las piezas visualmente
-        UpdateAllTiles();
+        
 
 
 
@@ -342,6 +372,7 @@ public class MovimientoPiezas : MonoBehaviour
             //rogue cast
             case 1:
                 targetTile.identity = 0;
+                targetTile.SpawnWizAnimation(0);
                 
                 break;
                 //necro cast
@@ -354,9 +385,13 @@ public class MovimientoPiezas : MonoBehaviour
                         {
                             if (board.tiles[i, j].GetComponent<Tile>().p1DiedHere && board.tiles[i, j].GetComponent<Tile>().identity != 6)
                             {
-                                board.tiles[i,j].GetComponent<Tile>().identity = 6;
+                                board.tiles[i,j].GetComponent<Tile>().identity = 10;
                                 board.tiles[i, j].GetComponent<Tile>().p2 = false;
                                 board.tiles[i, j].GetComponent<Tile>().team = board.p1T;
+                                board.tiles[i, j].GetComponent<Tile>().p1DiedHere = false;
+                                board.tiles[i, j].GetComponent<Tile>().clearParticles(0);
+                                board.tiles[i, j].GetComponent<Tile>().SpawnWizAnimation(1);
+
                             }
 
                         }
@@ -364,9 +399,12 @@ public class MovimientoPiezas : MonoBehaviour
                         {
                             if (board.tiles[i, j].GetComponent<Tile>().p2DiedHere && board.tiles[i, j].GetComponent<Tile>().identity != 6)
                             {
-                                board.tiles[i, j].GetComponent<Tile>().identity = 6;
+                                board.tiles[i, j].GetComponent<Tile>().identity = 10;
                                 board.tiles[i, j].GetComponent<Tile>().p2 = true;
                                 board.tiles[i, j].GetComponent<Tile>().team = board.p2T;
+                                board.tiles[i, j].GetComponent<Tile>().p2DiedHere = false;
+                                board.tiles[i, j].GetComponent<Tile>().clearParticles(0);
+                                board.tiles[i, j].GetComponent<Tile>().SpawnWizAnimation(1);
                             }
                         }
                     }
@@ -440,27 +478,76 @@ public class MovimientoPiezas : MonoBehaviour
             }
         }
         //registrar casillas con piezas muertas para el necromancer
-        if (targetTile.identity != 0 && targetTile.identity != 1 )
+        if (board.p1T == 2 || board.p1T == 5)
         {
-
-            if (!targetTile.p2DiedHere && !targetTile.p1DiedHere)
+            Debug.Log("Jugador 1 es necro");
+            if (targetTile.identity != 0 && targetTile.identity != 1 && targetTile.identity != 10)
             {
-                if (targetTile.p2)
+                
+                if (!targetTile.p2DiedHere && !targetTile.p1DiedHere)
                 {
-                    targetTile.p2DiedHere = true;
-                }
-                else
-                {
-                    targetTile.p1DiedHere = true;
+                    
+                    if (!targetTile.p2)
+                    {
+                        Debug.Log("Jugador 1 perdio una pieza que no es peon");
+                        targetTile.p1DiedHere = true;
+                        targetTile.ParticleStatus(1);
+                    }
                 }
             }
+        
+        }
+        if (board.p2T == 2 || board.p2T == 5)
+        {
+            Debug.Log("Jugador 2 es necro");
+            if (targetTile.identity != 0 && targetTile.identity != 1 && targetTile.identity != 10)
+            {
+
+                if (!targetTile.p2DiedHere && !targetTile.p1DiedHere)
+                {
+                    if (targetTile.p2)
+                    {
+                        Debug.Log("Jugador 2 perdio una pieza que no es peon");
+                        targetTile.p2DiedHere = true;
+                        if(!board.mirror)
+                        {
+                            targetTile.ParticleStatus(1);
+                        }
+                        else
+                        {
+                            targetTile.ParticleStatus(2);
+                        }
+                        
+                    }
+                    
+                }
+            }
+
+        }
+        // no es un zombie
+        if(selectedTile.identity != 10)
+        {
+            targetTile.team = selectedTile.team;
+            targetTile.identity = selectedTile.identity;
+            targetTile.p2 = selectedTile.p2;
+            //limitar al peon
+            targetTile.hasMoved = true;
+        }//es un zombie pero se mueve a una casilla vacia
+        else if (selectedTile.identity == 10 && targetTile.identity == 0)
+        {
+            targetTile.team = selectedTile.team;
+            targetTile.identity = selectedTile.identity;
+            targetTile.p2 = selectedTile.p2;
+            //limitar al peon
+            targetTile.hasMoved = true;
+        } // es un zombie pero se come a una pieza
+        else if (selectedTile.identity == 10 && targetTile.identity != 0)
+        {
+            targetTile.identity = 0;
+            targetTile.team = 0;
+            targetTile.p2 = false;
         }
         
-        targetTile.team = selectedTile.team;
-        targetTile.identity = selectedTile.identity;
-        targetTile.p2 = selectedTile.p2;
-        //limitar al peon
-        targetTile.hasMoved = true;
         
 
 

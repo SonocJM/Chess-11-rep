@@ -281,7 +281,8 @@ MonoBehaviour:
   usingAbility: 0
   wizAbility: 0
   wizAbility2: 0
-  rotationSpeed: 180
+  stoppedRotating: 0
+  rotationSpeed: 120
   abilityIndex: 0
   ui: {fileID: 1865159861}
 --- !u!1 &537879710
@@ -591,9 +592,9 @@ MonoBehaviour:
   gB: {fileID: 691991067}
   mP: {fileID: 456283623}
   mirror: 0
-  cDrogue: 0
-  cDnecro: 30
-  cDelem: 6
+  cDrogue: 16
+  cDnecro: 32
+  cDelem: 8
   p1Cd: 0
   p2Cd: 0
 --- !u!4 &691991068
@@ -620,6 +621,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 793114340}
+  - component: {fileID: 793114342}
+  - component: {fileID: 793114341}
   m_Layer: 0
   m_Name: ChessBoardRotate
   m_TagString: Untagged
@@ -643,6 +646,56 @@ Transform:
   - {fileID: 691991068}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &793114341
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793114339}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &793114342
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793114339}
+  m_Mesh: {fileID: 0}
 --- !u!1 &1008953736
 GameObject:
   m_ObjectHideFlags: 0
@@ -881,7 +934,7 @@ Transform:
   m_GameObject: {fileID: 1593479282}
   serializedVersion: 2
   m_LocalRotation: {x: 0.63068676, y: -0.18996409, z: 0.16310668, w: 0.73453665}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: -1.69, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1064,7 +1117,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 18950ca58db54174dbe053b26b6b6872, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

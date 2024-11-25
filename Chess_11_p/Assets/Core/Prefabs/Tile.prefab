@@ -124,6 +124,7 @@ MonoBehaviour:
   p1DiedHere: 0
   p2DiedHere: 0
   isHighlighted: 0
+  portal: 0
   p2: 0
   hasMoved: 0
   x: 0
@@ -135,15 +136,16 @@ MonoBehaviour:
   OffsetRotation: {x: 0, y: 0, z: 0, w: 0}
   PiecesModels:
   - {fileID: 0}
-  - {fileID: 4300000, guid: dc780bbe80163bc46883e8c2d96af493, type: 3}
-  - {fileID: 4300000, guid: b66f4744e8bb24a448fcfa81a1781df5, type: 3}
-  - {fileID: 4300000, guid: 5538ed982796ebd4c8cc731f2b530e42, type: 3}
-  - {fileID: 4300000, guid: 25f5852bdc32bf74790bd0cfd333a532, type: 3}
-  - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
-  - {fileID: 4300000, guid: 6a678404afed8a84499291f5b2dc6a73, type: 3}
-  - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
-  - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
-  - {fileID: 4300000, guid: 63372fdecc46ca243992469e037a3b89, type: 3}
+  - {fileID: 3326428093478184164, guid: 7fe45b5dbe9110f4eb00c8e8e37c362d, type: 3}
+  - {fileID: 8211183223474006054, guid: c4322e9c090fa674b8dc06285c71d145, type: 3}
+  - {fileID: 3394426877861451246, guid: 6cb835be42d277342a07a35d78323ab8, type: 3}
+  - {fileID: 5290173831979730152, guid: 4cfa38f09ae49fc47b2cb1da55de5b16, type: 3}
+  - {fileID: -1672247754984885373, guid: 843a81fafdb1fe047b1d09f195bac63f, type: 3}
+  - {fileID: 6586295173500381172, guid: df9ce210248c5184d8d241c4459d68e8, type: 3}
+  - {fileID: -663627029383328786, guid: c52dce52041704c48ace29067ecb2413, type: 3}
+  - {fileID: -726126200414374289, guid: b1eced17c0ca1d74fb03f45499028cc2, type: 3}
+  - {fileID: -8111325683966678585, guid: 00f405dd6dcf5dc43b0e399f6d6f4be8, type: 3}
+  - {fileID: -6491458352085086616, guid: 578405d8e7319a7409d3ca38ea427fb7, type: 3}
   PiecesMaterials:
   - {fileID: 0}
   - {fileID: 2100000, guid: e251edffb431d1744bfb5d5e46554b8d, type: 2}
@@ -152,3 +154,12 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 67744e1f81d3f0c40b46b2eeb88951d9, type: 2}
   - {fileID: 2100000, guid: af98ce4e2a67c194b8eb8ff0cfa08969, type: 2}
   - {fileID: 2100000, guid: 4a512045a918e6f4cb4a872673d29301, type: 2}
+  currentStatusParticle: {fileID: 0}
+  statusParticlesPrefabs:
+  - {fileID: 2464890371442159491, guid: 292f86aab521d104380425b80ad1042d, type: 3}
+  - {fileID: 2464890371442159491, guid: b6177c547f1007d4483aeb4f887fd5a8, type: 3}
+  currentAnimationParticle: {fileID: 0}
+  AnimationParticlesPrefabs:
+  - {fileID: 3933999146615595985, guid: 1d1dcb42af614e448899df450d7c735b, type: 3}
+  - {fileID: 6398422784158704569, guid: 82a91ae63f454f24faa8da73fc433fc1, type: 3}
+  - {fileID: 5026197623200153895, guid: 34c732dd3b25d3944a3d1a1e4dac85c5, type: 3}

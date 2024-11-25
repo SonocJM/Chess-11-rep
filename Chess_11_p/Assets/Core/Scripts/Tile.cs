@@ -25,9 +25,15 @@ public class Tile : MonoBehaviour
     public Vector3 OffsetPos;
     public Quaternion OffsetRotation;
     [Header("Pieces Models")]
-    public Mesh[] PiecesModels; 
+    public Mesh[] PiecesModels;
     [Header("Pieces Materials")]
     public Material[] PiecesMaterials;
+    [Header("Status Particles")]
+    public GameObject currentStatusParticle;
+    public GameObject[] statusParticlesPrefabs;
+    [Header("Animation Particles")]
+    public GameObject currentAnimationParticle;
+    public GameObject[] AnimationParticlesPrefabs;
     
 
     
@@ -48,20 +54,21 @@ public class Tile : MonoBehaviour
         p1DiedHere = false;
         p2DiedHere = false;
         LegalMovesAssign();
-        SpawnPiece(p2);
+        SpawnPiece();
         ChangePiece();
+        
     }
     
 
     
-    private void SpawnPiece(bool p2)
+    private void SpawnPiece()
     {
         // Crear un nuevo GameObject y asignarlo a currentPiece
         currentPiece = new GameObject("Piece");
         currentPiece.transform.SetParent(transform); // Hacerlo hijo del objeto actual
         currentPiece.transform.localPosition = Vector3.zero; // Hereda la posición del padre
         currentPiece.transform.localRotation = Quaternion.identity; // Hereda la rotación del padre
-        currentPiece.transform.localScale = new Vector3(90f, 10f, 90f);
+        //currentPiece.transform.localScale = new Vector3(90f, 10f, 90f);
         currentPiece.AddComponent<MeshFilter>();     // Agregar el componente MeshFilter
         currentPiece.AddComponent<MeshRenderer>();   // Agregar el componente MeshRenderer
 
@@ -78,9 +85,13 @@ public class Tile : MonoBehaviour
         meshFilter.mesh = PiecesModels[identity];
         meshRenderer.material = PiecesMaterials[team];
         //arreglar rotacion
-        if (p2)
+        if (!p2)
         {
-            currentPiece.transform.rotation = Quaternion.Euler(0, 180, 0);
+            currentPiece.transform.localRotation = Quaternion.Euler(0, 120, 0);
+        }
+        else
+        {
+            currentPiece.transform.localRotation = Quaternion.Euler(0, -50, 0);
         }
     }
 
@@ -273,6 +284,19 @@ public class Tile : MonoBehaviour
                     }
                 }
                 break;
+            case 10: // Zombie
+                Vector2Int[] zombieMoves = {
+                new Vector2Int(1, 0), new Vector2Int(-1, 0),
+                new Vector2Int(0, 1), new Vector2Int(0, -1),
+                new Vector2Int(1, 1), new Vector2Int(-1, 1),
+                new Vector2Int(1, -1), new Vector2Int(-1, -1)
+            };
+
+                foreach (Vector2Int move in zombieMoves)
+                {
+                    AddMovesIfValid(pos + move, legalMoves);
+                }
+                break;
         }
     }
 
@@ -334,6 +358,50 @@ public class Tile : MonoBehaviour
             }
         }
     }
+    public void ParticleStatus(int team)
+    {
+        
+        
+        switch(team)
+        {
+            case 0:
+                
+                break;
+            case 1:
+                currentStatusParticle = Instantiate(statusParticlesPrefabs[0],transform);
+                break;
+            case 2:
+                currentStatusParticle = Instantiate(statusParticlesPrefabs[1], transform);
+                break;
+        }
 
+    }
+    
 
+    public void clearParticles(int index)
+    {
+        switch(index)
+        {
+            case 0:
+                Destroy(currentStatusParticle);
+                
+                break;
+            case 1:
+                Destroy(currentAnimationParticle);
+                
+                break;
+            case 2:
+                
+                
+                break;
+        }
+    }
+    public void SpawnWizAnimation(int index)
+    {
+       currentAnimationParticle = Instantiate(AnimationParticlesPrefabs[index], transform);
+    }
+    public void DeSpawnWizAnimation()
+    {
+        Destroy(currentAnimationParticle);
+    }
 }
