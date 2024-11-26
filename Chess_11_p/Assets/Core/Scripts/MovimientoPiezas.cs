@@ -19,6 +19,7 @@ public class MovimientoPiezas : MonoBehaviour
     public bool heroPieceAliveP1;
     public bool heroPieceAliveP2;
     public UIChessBoard ui;
+    public MenuVictoria mV;
 
 
     private Tile selectedTile = null; // Casilla actualmente seleccionada
@@ -475,11 +476,12 @@ public class MovimientoPiezas : MonoBehaviour
         {
             if(p1Turn)
             {
-                Debug.Log("gano jugador uno");
+                //jugador 1 gano
+                mV.SpawnPanel(p1Turn, board.p1T);
             }
             else
             {
-                Debug.Log("gano jugador 2");
+                mV.SpawnPanel(p1Turn, board.p2T);
             }
         }
         if (targetTile.identity == 7 || targetTile.identity == 8 || targetTile.identity == 9 ) //desactivar boton de habilidad

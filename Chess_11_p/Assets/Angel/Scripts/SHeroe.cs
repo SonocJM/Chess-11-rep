@@ -9,13 +9,16 @@ public class SHeroe : MonoBehaviour
     public Sprite[] Campeon;
     public Sprite[] Movimiento;
     public string[] Descripcion;
+    public string[] NombreHero;
     public Image HeroeS;
     public Image HeroeS2;
     public Image Habilidad;
     public TextMeshProUGUI Lore;
+    public TextMeshProUGUI CampeonNonbre;
     public int IndiceHeroe = 0;
     public int IndiceHabilidad = 0;
     public int IndiceLore = 0;
+    public int IndiceCNombre = 0;
 
     void Start()
     {
@@ -35,6 +38,10 @@ public class SHeroe : MonoBehaviour
         if(IndiceLore >= Descripcion.Length)
             IndiceLore = 0 ;
 
+        IndiceCNombre++;
+        if (IndiceCNombre >= NombreHero.Length)
+            IndiceCNombre = 0;
+
         Hero();
     }
     public void Anterior()
@@ -51,6 +58,10 @@ public class SHeroe : MonoBehaviour
         if (IndiceLore < 0)
             IndiceLore = Descripcion.Length - 1;
 
+        IndiceCNombre--;
+        if (IndiceCNombre < 0)
+            IndiceCNombre = NombreHero.Length - 1;
+
         Hero();
     }
     public void Hero()
@@ -59,5 +70,6 @@ public class SHeroe : MonoBehaviour
         HeroeS2.sprite = Campeon[IndiceHeroe];
         Habilidad.sprite = Movimiento[IndiceHabilidad];
         Lore.text = Descripcion[IndiceLore];
+        CampeonNonbre.text = NombreHero[IndiceCNombre];
     }
 }

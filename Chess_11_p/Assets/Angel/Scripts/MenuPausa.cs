@@ -45,6 +45,13 @@ public class MenuPausa : MonoBehaviour
             }
         }
     }
+    public void BotonP()
+    {
+        if (MPausa == true)
+        {
+            ReanudarP();
+        }
+    }
     public void ReanudarP()
     {
         _MPausa.SetActive(false);
