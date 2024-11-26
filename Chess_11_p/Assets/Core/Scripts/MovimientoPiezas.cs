@@ -16,6 +16,9 @@ public class MovimientoPiezas : MonoBehaviour
     public bool wizAbility;
     public bool wizAbility2;
     public bool stoppedRotating;
+    public bool heroPieceAliveP1;
+    public bool heroPieceAliveP2;
+    public UIChessBoard ui;
 
 
     private Tile selectedTile = null; // Casilla actualmente seleccionada
@@ -24,7 +27,7 @@ public class MovimientoPiezas : MonoBehaviour
     private Camera mainCamera;
     public float rotationSpeed = 90f;
     public int abilityIndex;
-    public UIChessBoard ui;
+    public UIChessBoard uiManager;
     
 
     private void Awake()
@@ -33,6 +36,8 @@ public class MovimientoPiezas : MonoBehaviour
         wizAbility2 = false;
         usingAbility = false;
         p1Turn = true;
+        heroPieceAliveP1 = true;
+        heroPieceAliveP2 = true;
         
     }
     private void Start()
@@ -290,7 +295,7 @@ public class MovimientoPiezas : MonoBehaviour
                             {
                                 if (board.tiles[i, j].GetComponent<Tile>().p2 != p2 && board.tiles[i, j].GetComponent<Tile>().identity != 6)
                                 {
-                                    if (board.tiles[i, j].GetComponent<Tile>().identity != 0 && board.tiles[i, j].GetComponent<Tile>().identity != 5)
+                                    if (board.tiles[i, j].GetComponent<Tile>().identity != 0 && board.tiles[i, j].GetComponent<Tile>().identity != 5 && board.tiles[i, j].GetComponent<Tile>().identity != 7 && board.tiles[i, j].GetComponent<Tile>().identity != 8 && board.tiles[i, j].GetComponent<Tile>().identity != 9)
                                     {
                                         board.tiles[i, j].GetComponent<Renderer>().material = clickMaterial;
                                         board.tiles[i, j].GetComponent<Tile>().isHighlighted = true;
@@ -465,7 +470,7 @@ public class MovimientoPiezas : MonoBehaviour
 
     private void MovePiece(Tile targetTile)
     {
-        // Transferir datos de la casilla seleccionada a la nueva
+        
         if(targetTile.identity == 6) //detectar quien gano
         {
             if(p1Turn)
@@ -476,6 +481,12 @@ public class MovimientoPiezas : MonoBehaviour
             {
                 Debug.Log("gano jugador 2");
             }
+        }
+        if (targetTile.identity == 7 || targetTile.identity == 8 || targetTile.identity == 9 ) //desactivar boton de habilidad
+        {
+            
+            uiManager.DisableButton(p1Turn);
+            
         }
         //registrar casillas con piezas muertas para el necromancer
         if (board.p1T == 2 || board.p1T == 5)

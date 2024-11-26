@@ -265,7 +265,17 @@ public class Tile : MonoBehaviour
 
             case 9: // Elementalist
 
+                Vector2Int[] wizMoves = {
+                new Vector2Int(1, 0), new Vector2Int(-1, 0),
+                new Vector2Int(0, 1), new Vector2Int(0, -1),
+                new Vector2Int(1, 1), new Vector2Int(-1, 1),
+                new Vector2Int(1, -1), new Vector2Int(-1, -1)
+            };
 
+                foreach (Vector2Int move in wizMoves)
+                {
+                    AddMovesIfValid(pos + move, legalMoves);
+                }
                 Vector2Int[] wizCaptures = {
                 new Vector2Int(4, 4), new Vector2Int(-4, 4),
                 new Vector2Int(4, -4), new Vector2Int(-4, -4)

@@ -1968,7 +1968,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Campeon:
   - {fileID: 21300000, guid: 29326030b939b074289797734e42d21b, type: 3}
-  - {fileID: 21300000, guid: 0dcd140f9b7089243b6beb1813d6ce21, type: 3}
+  - {fileID: 21300000, guid: be54ac447cbb7af4e995ca9debfd7d55, type: 3}
   - {fileID: 21300000, guid: 4327525c3726dfc41803590e35b57bac, type: 3}
   Movimiento:
   - {fileID: 21300000, guid: 0dcd140f9b7089243b6beb1813d6ce21, type: 3}
@@ -4367,7 +4367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Campeon:
   - {fileID: 21300000, guid: 29326030b939b074289797734e42d21b, type: 3}
-  - {fileID: 21300000, guid: 0dcd140f9b7089243b6beb1813d6ce21, type: 3}
+  - {fileID: 21300000, guid: be54ac447cbb7af4e995ca9debfd7d55, type: 3}
   - {fileID: 21300000, guid: 4327525c3726dfc41803590e35b57bac, type: 3}
   Movimiento:
   - {fileID: 21300000, guid: 0dcd140f9b7089243b6beb1813d6ce21, type: 3}

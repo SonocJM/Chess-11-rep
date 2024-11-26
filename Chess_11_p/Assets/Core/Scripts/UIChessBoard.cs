@@ -21,8 +21,18 @@ public class UIChessBoard : MonoBehaviour
     public int p2Team;
     public Image[] AbilityIcons;
     public Image[] CharacterIcons;
-    
-    
+
+    public void DisableButton(bool p1)
+    {
+        if (p1)
+        {
+            buttonP2.SetActive(false);
+        }
+        else
+        {
+            buttonP1.SetActive(false);
+        }
+    }
     public void UniversalIndex()
     {
 
