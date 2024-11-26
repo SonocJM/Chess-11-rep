@@ -87,11 +87,11 @@ public class Tile : MonoBehaviour
         //arreglar rotacion
         if (!p2)
         {
-            currentPiece.transform.localRotation = Quaternion.Euler(0, 120, 0);
+            currentPiece.transform.localRotation = Quaternion.Euler(0, 180, 0);
         }
         else
         {
-            currentPiece.transform.localRotation = Quaternion.Euler(0, -50, 0);
+            currentPiece.transform.localRotation = Quaternion.Euler(0, 0, 0);
         }
     }
 
