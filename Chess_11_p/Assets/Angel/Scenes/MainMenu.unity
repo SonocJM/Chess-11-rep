@@ -529,7 +529,7 @@ MonoBehaviour:
   swapInterval: 1
   spacing: -10
   transitionTime: 1
-  numberOfHighlightedTiles: 3
+  numberOfHighlightedTiles: 20
 --- !u!1 &425750153
 GameObject:
   m_ObjectHideFlags: 0
